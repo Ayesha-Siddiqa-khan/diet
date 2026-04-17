@@ -1,0 +1,10 @@
+services:
+  diet-app:
+    build: .
+    container_name: diet-app
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=change-this-before-production
+    volumes:
+      - ./instance:/app/instance

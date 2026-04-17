@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+    <form method="get" action="{{ url_for('index') }}" class="row-form">
+        <label for="day">Day</label>
+        <input id="day" name="day" type="date" value="{{ selected_day }}">
+        <button type="submit">Load</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Add Meal</h2>
+    <form method="post" action="{{ url_for('add_meal') }}" class="grid-form">
+        <input type="hidden" name="meal_date" value="{{ selected_day }}">
+
+        <label for="meal_name">Meal name</label>
+        <input id="meal_name" name="meal_name" type="text" required placeholder="Example: Chicken and rice">
+
+        <label for="calories">Calories</label>
+        <input id="calories" name="calories" type="number" min="0" value="0" required>
+
+        <label for="protein">Protein (g)</label>
+        <input id="protein" name="protein" type="number" min="0" value="0" required>
+
+        <label for="carbs">Carbs (g)</label>
+        <input id="carbs" name="carbs" type="number" min="0" value="0" required>
+
+        <label for="fat">Fat (g)</label>
+        <input id="fat" name="fat" type="number" min="0" value="0" required>
+
+        <button type="submit">Add meal</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Summary for {{ selected_day }}</h2>
+    <div class="totals">
+        <p><strong>Calories:</strong> {{ totals.calories }}</p>
+        <p><strong>Protein:</strong> {{ totals.protein }} g</p>
+        <p><strong>Carbs:</strong> {{ totals.carbs }} g</p>
+        <p><strong>Fat:</strong> {{ totals.fat }} g</p>
+    </div>
+
+    <h3>Meals</h3>
+    {% if meals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Meal</th>
+                    <th>Calories</th>
+                    <th>Protein</th>
+                    <th>Carbs</th>
+                    <th>Fat</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meal in meals %}
+                    <tr>
+                        <td>{{ meal.meal_name }}</td>
+                        <td>{{ meal.calories }}</td>
+                        <td>{{ meal.protein }}</td>
+                        <td>{{ meal.carbs }}</td>
+                        <td>{{ meal.fat }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('delete_meal', meal_id=meal.id) }}">
+                                <input type="hidden" name="selected_day" value="{{ selected_day }}">
+                                <button type="submit" class="danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No meals yet for this day.</p>
+    {% endif %}
+</section>
+{% endblock %}
